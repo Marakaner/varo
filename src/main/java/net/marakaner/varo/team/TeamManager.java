@@ -18,7 +18,7 @@ public class TeamManager {
 
     public void createTeam(String name, UUID playerOne, UUID playerTwo, char color) {
 
-        Team team = new Team(name, playerOne, playerTwo, color);
+        Team team = new Team(name, playerOne, playerTwo, color, this.teamMap.size());
 
         this.teamMap.put(name.toLowerCase(), team);
     }
@@ -29,7 +29,7 @@ public class TeamManager {
 
     public Team getTeam(UUID player) {
         for(Team team : this.teamMap.values()) {
-            if(team.getPlayer().contains(player)) {
+            if(team.getPlayer().containsKey(player)) {
                 return team;
             }
         }

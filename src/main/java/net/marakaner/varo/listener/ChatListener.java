@@ -1,8 +1,9 @@
 package net.marakaner.varo.listener;
 
 import net.marakaner.varo.Varo;
-import net.marakaner.varo.rank.Rank;
 import net.marakaner.varo.team.Team;
+import net.marakaner.varo.team.TeamManager;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,24 +15,18 @@ public class ChatListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
-        Rank rank = Varo.getInstance().getRankManager().getRank(player.getUniqueId());
-
         if(event.getMessage().contains("%")) {
             event.getMessage().replace("%", "%%");
         }
 
-        switch (rank) {
-            case ADMIN:
-                event.setMessage("§4Admin §8┃ §4" + player.getName() + " §8» §7" + event.getMessage());
-                break;
-            case TEAM:
+        Team team = Varo.getInstance().getTeamManager().getTeam(player.getUniqueId());
 
-                Team team = Varo.getInstance().getTeamManager().getTeam(player.getUniqueId());
+        if(team == null) {
+            event.setMessage("§7KEIN TEAM §8┃ §7" + player.getName() + " §8» §7" + event.getMessage());
+        } else {
+            ChatColor chatColor = ChatColor.getByChar(team.getColor());
 
-
-                break;
-            case UNREGISTERED:
-                event.setMessage("§7KEIN TEAM §8┃ §7" + player.getName() + " §8» §7" + event.getMessage());
+            event.setMessage(chatColor + team.getName() + " §8┃ " + chatColor + player.getName() + " §8» §7" + event.getMessage());
         }
     }
 
